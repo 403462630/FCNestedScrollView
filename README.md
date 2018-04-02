@@ -1,11 +1,17 @@
 ## FCNestedScrollView
 
+![滚动](333.gif)  	![fling](444.gif) 
+
+
+![下拉刷新](222.gif) 	![常用需求](123.gif)
+
 ### 一个支持嵌套可滚动视图的NestedScrollView
 
 - 支持NestedScrollView 嵌套 NestedScrollView、RecyclerView、webview
 - 支持嵌套下拉刷新（目前只扩展了系统自带的SwipeRefreshLayout, 如果只是在最外层的滚动视图添加下拉刷新，则无任何限制）
 - NestedScrollView支持多层嵌套
 - 不支持RecyclerView 嵌套NestedScrollView、webview
+
 
 maven地址
 
