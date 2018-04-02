@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.fc.nestedscrollview.FCNestedScrollView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:fc_scroll_mode="down">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+            <include layout="@layout/item_my" />
+        </LinearLayout>
+    </com.fc.nestedscrollview.FCNestedScrollView>
+</FrameLayout>

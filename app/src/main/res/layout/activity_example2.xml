@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.fc.nestedscrollview.FCSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.fc.nestedscrollview.FCNestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="700dp"
+            android:paddingBottom="100dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="FCNestedScrollView 嵌套 FCRecyclerView 四种滚动模式效果, 加下拉刷新FCSwipeRefreshLayout:"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:padding="15dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="model = all"
+                android:paddingBottom="5dp"
+                app:layout_constraintLeft_toLeftOf="@+id/swipe_refresh1"
+                app:layout_constraintBottom_toTopOf="@+id/swipe_refresh1"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="model = none"
+                android:paddingBottom="5dp"
+                app:layout_constraintLeft_toLeftOf="@+id/swipe_refresh2"
+                app:layout_constraintBottom_toTopOf="@+id/swipe_refresh2"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="model = up"
+                android:paddingBottom="5dp"
+                app:layout_constraintLeft_toLeftOf="@+id/swipe_refresh4"
+                app:layout_constraintBottom_toTopOf="@+id/swipe_refresh4"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="model = down"
+                android:paddingBottom="5dp"
+                app:layout_constraintLeft_toLeftOf="@+id/swipe_refresh3"
+                app:layout_constraintBottom_toTopOf="@+id/swipe_refresh3"/>
+
+            <com.fc.nestedscrollview.FCSwipeRefreshLayout
+                android:id="@+id/swipe_refresh1"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="100dp"
+                android:layout_marginLeft="15dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.fc.nestedscrollview.FCRecyclerView
+                    android:id="@+id/recycler_view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_border"
+                    app:fc_scroll_mode="all"
+                    app:fc_has_pull_down_refresh="true">
+
+                </com.fc.nestedscrollview.FCRecyclerView>
+            </com.fc.nestedscrollview.FCSwipeRefreshLayout>
+
+
+            <com.fc.nestedscrollview.FCSwipeRefreshLayout
+                android:id="@+id/swipe_refresh2"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="100dp"
+                android:layout_marginRight="15dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.fc.nestedscrollview.FCRecyclerView
+                    android:id="@+id/recycler_view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_border"
+                    app:fc_scroll_mode="none"
+                    app:fc_has_pull_down_refresh="true">
+
+                </com.fc.nestedscrollview.FCRecyclerView>
+            </com.fc.nestedscrollview.FCSwipeRefreshLayout>
+
+
+            <com.fc.nestedscrollview.FCSwipeRefreshLayout
+                android:id="@+id/swipe_refresh3"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="350dp"
+                android:layout_marginLeft="15dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.fc.nestedscrollview.FCRecyclerView
+                    android:id="@+id/recycler_view3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_border"
+                    app:fc_scroll_mode="down"
+                    app:fc_has_pull_down_refresh="true">
+
+                </com.fc.nestedscrollview.FCRecyclerView>
+            </com.fc.nestedscrollview.FCSwipeRefreshLayout>
+
+
+            <com.fc.nestedscrollview.FCSwipeRefreshLayout
+                android:id="@+id/swipe_refresh4"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="350dp"
+                android:layout_marginRight="15dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.fc.nestedscrollview.FCRecyclerView
+                    android:id="@+id/recycler_view4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_border"
+                    app:fc_scroll_mode="up"
+                    app:fc_has_pull_down_refresh="true"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </com.fc.nestedscrollview.FCRecyclerView>
+            </com.fc.nestedscrollview.FCSwipeRefreshLayout>
+
+        </android.support.constraint.ConstraintLayout>
+    </com.fc.nestedscrollview.FCNestedScrollView>
+</com.fc.nestedscrollview.FCSwipeRefreshLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="fc_scroll_mode" format="enum">
+        <enum name="all" value="0" />
+        <enum name="up" value="1" />
+        <enum name="down" value="2" />
+        <enum name="none" value="3" />
+    </attr>
+    <attr name="fc_has_pull_down_refresh" format="boolean"></attr>
+    <attr name="fc_is_nested_scroll_enabled" format="boolean"/>
+    <attr name="fc_is_linked_parent" format="boolean"/>
+
+    <declare-styleable name="FCRecyclerView">
+        <attr name="fc_scroll_mode"/>
+        <attr name="fc_has_pull_down_refresh"/>
+        <attr name="fc_is_linked_parent"/>
+    </declare-styleable>
+
+    <declare-styleable name="FCNestedScrollView">
+        <attr name="fc_scroll_mode"/>
+        <attr name="fc_has_pull_down_refresh"/>
+        <attr name="fc_is_linked_parent"/>
+    </declare-styleable>
+
+    <declare-styleable name="FCWebView">
+        <attr name="fc_scroll_mode"/>
+        <attr name="fc_has_pull_down_refresh"/>
+        <attr name="fc_is_nested_scroll_enabled"/>
+    </declare-styleable>
+</resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.fc.nestedscrollview.FCNestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.fc.nestedscrollview.example.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:background="#ff0000">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#ffff00">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="置顶header"/>
+        </LinearLayout>
+s
+        <com.fc.nestedscrollview.FCSwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="400dp">
+
+            <com.fc.nestedscrollview.FCWebView
+                android:id="@+id/web_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:fc_scroll_mode="down">
+
+            </com.fc.nestedscrollview.FCWebView>
+        </com.fc.nestedscrollview.FCSwipeRefreshLayout>
+    </LinearLayout>
+</com.fc.nestedscrollview.FCNestedScrollView>
