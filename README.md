@@ -86,7 +86,7 @@ compile 'com.fc.nestedscrollview:FCNestedScrollView:1.0.0'
 ```
 
 ```
-//继承WebView
+//继承SwipeRefreshLayout
 <com.fc.nestedscrollview.FCSwipeRefreshLayout
     android:layout_width="150dp"
     android:layout_height="200dp">
