@@ -27,6 +27,8 @@ class Tab3Fragment : Fragment() {
         web_view.settings.builtInZoomControls = true
         web_view.settings.javaScriptEnabled = true
         web_view.settings.domStorageEnabled = true
-        web_view.loadUrl("http://www.baidu.com/")
+        web_view.settings.setSupportZoom(false)
+        web_view.setOnLongClickListener { true }
+        web_view.loadUrl("http://news.baidu.com/")
     }
 }

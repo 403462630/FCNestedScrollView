@@ -38,6 +38,7 @@ class Example5Activity : AppCompatActivity() {
     private fun initViewPage() {
         view_pager.adapter = MyViewPageAdapter(supportFragmentManager)
         tab_layout.setupWithViewPager(view_pager)
+        view_pager.offscreenPageLimit = 3
     }
 
     private class MyViewPageAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
