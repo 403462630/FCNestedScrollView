@@ -9,7 +9,7 @@
 
 - 支持NestedScrollView 嵌套 NestedScrollView、RecyclerView、webview
 - 支持嵌套下拉刷新（目前只扩展了系统自带的SwipeRefreshLayout, 如果只是在最外层的滚动视图添加下拉刷新，则无任何限制）
-- NestedScrollView支持多层嵌套
+- NestedScrollView支持多层嵌套（最少支持三层嵌套，更多层嵌套没测试过，按道理应该也可以）
 - 不支持RecyclerView 嵌套NestedScrollView、webview
 
 
