@@ -36,7 +36,6 @@ public class FCWebView extends WebView {
     private float parentConsumed;
 
     private int nestedScrollModel = MODEL_ALL;
-    private boolean hasPullDownRefresh;
 //    private float startFlingVelocity;
 //    private long startFlingTime;
 //    private float consumedDistance;
@@ -55,7 +54,6 @@ public class FCWebView extends WebView {
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.FCWebView);
         nestedScrollModel = typedArray.getInt(R.styleable.FCWebView_fc_scroll_mode, MODEL_ALL);
-        hasPullDownRefresh = typedArray.getBoolean(R.styleable.FCWebView_fc_has_pull_down_refresh, false);
         boolean isNestedScrollEnable = typedArray.getBoolean(R.styleable.FCWebView_fc_is_nested_scroll_enabled, true);
         typedArray.recycle();
 
@@ -86,10 +84,10 @@ public class FCWebView extends WebView {
                 flag = direction < 0 && canScrollVertically(direction);
                 break;
             case MODEL_UP:
-                flag = (hasPullDownRefresh || direction > 0) && canScrollVertically(direction);
+                flag = direction > 0 && canScrollVertically(direction);
                 break;
             case MODEL_NONE:
-                flag = (hasPullDownRefresh && direction < 0 && canScrollVertically(direction)) || false;
+                flag = false;
                 break;
         }
         return flag;

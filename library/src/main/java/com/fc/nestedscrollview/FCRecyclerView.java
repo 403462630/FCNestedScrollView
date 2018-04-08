@@ -28,8 +28,6 @@ public class FCRecyclerView extends RecyclerView {
     private ScrollerCompat scrollerCompat;
     private OverScroller overScroller;
     private int nestedScrollModel = MODEL_ALL;
-    /** 是否有下拉刷新，会导致nestedScrollModel 强制优先向下滚 */
-    private boolean hasPullDownRefresh;
     /** 当滚到顶或底部的时候 否联动parent滚动 */
     private boolean isLinkedParent;
 
@@ -46,19 +44,9 @@ public class FCRecyclerView extends RecyclerView {
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.FCRecyclerView);
         nestedScrollModel = typedArray.getInt(R.styleable.FCRecyclerView_fc_scroll_mode, MODEL_ALL);
-        hasPullDownRefresh = typedArray.getBoolean(R.styleable.FCRecyclerView_fc_has_pull_down_refresh, false);
         isLinkedParent = typedArray.getBoolean(R.styleable.FCRecyclerView_fc_is_linked_parent, true);
         typedArray.recycle();
-
         createScroller();
-    }
-
-    public boolean isHasPullDownRefresh() {
-        return hasPullDownRefresh;
-    }
-
-    public void setHasPullDownRefresh(boolean hasPullDownRefresh) {
-        this.hasPullDownRefresh = hasPullDownRefresh;
     }
 
     public int getNestedScrollModel() {
@@ -116,10 +104,10 @@ public class FCRecyclerView extends RecyclerView {
                 flag = direction < 0 && canScrollVertically(direction);
                 break;
             case MODEL_UP:
-                flag = (hasPullDownRefresh || direction > 0) && canScrollVertically(direction);
+                flag = direction > 0 && canScrollVertically(direction);
                 break;
             case MODEL_NONE:
-                flag = (hasPullDownRefresh && direction < 0 && canScrollVertically(direction)) || false;
+                flag = false;
                 break;
         }
         return flag;

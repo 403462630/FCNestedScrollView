@@ -23,7 +23,7 @@ maven {
 gradle依赖
 
 ```
-compile 'com.fc.nestedscrollview:FCNestedScrollView:1.0.0'
+compile 'com.fc.nestedscrollview:FCNestedScrollView:1.0.1'
 
 ```
 
@@ -43,15 +43,20 @@ compile 'com.fc.nestedscrollview:FCNestedScrollView:1.0.0'
 - true （默认）fling时，当自己滚动完成之后 传递给parentview继续fling
 - false fling时，当自己滚动完成之后 不传递给parentview继续fling
 
-##### fc\_has\_pull\_down\_refresh（是否被FCSwipeRefreshLayout等下拉刷新控件（以后扩展）包裹，会导致view强制优先向下滚）如下：
+##### fc\_is\_linked\_child 如下：
 
-- true 会导致view强制优先向下滚
-- false (默认)
+- true (默认)当自己滚到到顶部或底部的时候，联动childview继续fling
+- false 当自己滚到到顶部或底部的时候，不联动childview继续fling
 
 #####fc\_is\_nested\_scroll\_enabled(目前只有FCWebView支持，因为webview里的内容复杂、不可控，导致可能存在兼容性，建议 如果webview没有嵌套在其它可滚动视图里面，建议设置成false（或者使用原生的webview），否则设置成true)
 
 - true (默认)
 - false 不会添加任何手势处理，全使用系统默认的手势
+
+#####fc\_is\_pull\_refresh\_intercept(仅FCSwipeRefreshLayout支持）
+
+- true 下拉时，优先处理下拉刷新
+- false (默认)下拉时，最后处理下拉刷新
 
 ```
 //继承NestedScrollView

@@ -6,25 +6,29 @@
         <enum name="down" value="2" />
         <enum name="none" value="3" />
     </attr>
-    <attr name="fc_has_pull_down_refresh" format="boolean"></attr>
     <attr name="fc_is_nested_scroll_enabled" format="boolean"/>
     <attr name="fc_is_linked_parent" format="boolean"/>
+    <attr name="fc_is_linked_child" format="boolean"/>
+    <attr name="fc_is_pull_refresh_intercept" format="boolean"/>
 
     <declare-styleable name="FCRecyclerView">
         <attr name="fc_scroll_mode"/>
-        <attr name="fc_has_pull_down_refresh"/>
         <attr name="fc_is_linked_parent"/>
     </declare-styleable>
 
     <declare-styleable name="FCNestedScrollView">
         <attr name="fc_scroll_mode"/>
-        <attr name="fc_has_pull_down_refresh"/>
         <attr name="fc_is_linked_parent"/>
+        <attr name="fc_is_linked_child"/>
     </declare-styleable>
 
     <declare-styleable name="FCWebView">
         <attr name="fc_scroll_mode"/>
-        <attr name="fc_has_pull_down_refresh"/>
         <attr name="fc_is_nested_scroll_enabled"/>
+    </declare-styleable>
+
+    <declare-styleable name="FCSwipeRefreshLayout">
+        <attr name="fc_is_linked_child"/>
+        <attr name="fc_is_pull_refresh_intercept"/>
     </declare-styleable>
 </resources>
