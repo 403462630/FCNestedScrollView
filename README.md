@@ -23,7 +23,7 @@ maven {
 gradle依赖
 
 ```
-compile 'com.fc.nestedscrollview:FCNestedScrollView:1.0.1'
+compile 'com.fc.nestedscrollview:library:1.1.0'
 
 ```
 

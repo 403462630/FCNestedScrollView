@@ -19,11 +19,11 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
-        jcenter()
         maven {
             url  "https://dl.bintray.com/403462630/maven"
         }
+        google()
+        jcenter()
     }
 }
 

@@ -1,8 +1,8 @@
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-def siteUrl = 'https://github.com/403462630/FCNestedScrollView'   // 项目的主页
-def gitUrl = 'git@github.com:403462630/FCNestedScrollView.git'   // Git仓库的url
+def siteUrl = 'https://github.com/403462630/FCNestedScrollView1'   // 项目的主页
+def gitUrl = 'git@github.com:403462630/FCNestedScrollView1.git'   // Git仓库的url
 
 install {
     repositories.mavenInstaller {
@@ -12,7 +12,8 @@ install {
                 // Add your description here
                 name project.name     //项目的描述 你可以多写一点
                 description project.name
-                artifactId project.ext.projectName
+//                println("======${project.ext.artifactId}====")
+//                artifactId project.ext.artifactId
                 url siteUrl
                 // Set your license
                 licenses {
