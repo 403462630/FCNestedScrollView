@@ -2,6 +2,7 @@ package com.fc.nestedscrollview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v4.view.NestedScrollingParent2;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.View;
@@ -27,7 +28,7 @@ public class FCSwipeRefreshLayout extends SwipeRefreshLayout {
         super(context, attrs);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.FCSwipeRefreshLayout);
         isLinkedChild = typedArray.getBoolean(R.styleable.FCSwipeRefreshLayout_fc_is_linked_child, true);
-        isPullRefreshIntercept = typedArray.getBoolean(R.styleable.FCSwipeRefreshLayout_fc_is_pull_refresh_intercept, false);
+        isPullRefreshIntercept = true; // typedArray.getBoolean(R.styleable.FCSwipeRefreshLayout_fc_is_pull_refresh_intercept, false);
         typedArray.recycle();
         try {
             draggingField = getClass().getSuperclass().getDeclaredField("mTotalUnconsumed");

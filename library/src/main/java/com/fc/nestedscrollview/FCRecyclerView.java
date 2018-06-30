@@ -25,8 +25,6 @@ public class FCRecyclerView extends RecyclerView {
     public static final int MODEL_NONE = 3; //自己最后滚动
     private static final String TAG = "FCRecycleView";
 
-    private ScrollerCompat scrollerCompat;
-    private OverScroller overScroller;
     private int nestedScrollModel = MODEL_ALL;
     /** 当滚到顶或底部的时候 否联动parent滚动 */
     private boolean isLinkedParent;
@@ -46,7 +44,6 @@ public class FCRecyclerView extends RecyclerView {
         nestedScrollModel = typedArray.getInt(R.styleable.FCRecyclerView_fc_scroll_mode, MODEL_ALL);
         isLinkedParent = typedArray.getBoolean(R.styleable.FCRecyclerView_fc_is_linked_parent, true);
         typedArray.recycle();
-        createScroller();
     }
 
     public int getNestedScrollModel() {
@@ -58,27 +55,10 @@ public class FCRecyclerView extends RecyclerView {
     }
 
     @Override
-    public void onScrolled(int dx, int dy) {
-        super.onScrolled(dx, dy);
-        if (getScrollState() == SCROLL_STATE_SETTLING && dy != 0 && !canScrollVertically(dy) && isLinkedParentFling(dy)) {
-            startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, TYPE_TOUCH);
-            if (dy > 0) {
-                if (overScroller != null) {
-                    dispatchNestedPreFling( 0, overScroller.getCurrVelocity());
-                }
-                if (scrollerCompat != null) {
-                    dispatchNestedPreFling(0, scrollerCompat.getCurrVelocity()); //手动添加方向
-                }
-            } else {
-                if (overScroller != null) {
-                    dispatchNestedPreFling( 0, -overScroller.getCurrVelocity());
-                }
-                if (scrollerCompat != null) {
-                    dispatchNestedPreFling(0, -scrollerCompat.getCurrVelocity()); //手动添加方向
-                }
-            }
-            stopNestedScroll();
-        }
+    public boolean fling(int velocityX, int velocityY) {
+        boolean flag = super.fling(velocityX, velocityY);
+        FcNestedUtil.getCurrVelocityXY(this);
+        return flag;
     }
 
     /**
@@ -96,7 +76,7 @@ public class FCRecyclerView extends RecyclerView {
 
     protected boolean isCanScrollVertically(int direction) {
         boolean flag = false;
-        switch (nestedScrollModel) {
+        switch (getNestedScrollModel()) {
             case MODEL_ALL:
                 flag = canScrollVertically(direction);
                 break;
@@ -114,30 +94,41 @@ public class FCRecyclerView extends RecyclerView {
     }
 
     @Override
-    public void setLayoutManager(LayoutManager layoutManager) {
-        super.setLayoutManager(layoutManager);
-    }
-
-    @Override
     public boolean startNestedScroll(int axes) {
         return super.startNestedScroll(axes);
     }
 
     @Override
     public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
-        if (isCanScrollVertically(dy)) {
-            return false;
-        } else {
-            return super.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
-        }
+        return dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, ViewCompat.TYPE_TOUCH);
     }
 
     @Override
     public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow, int type) {
+//        Log.i(TAG, "dispatchNestedPreScroll: " + type);
         if (isCanScrollVertically(dy)) {
             return false;
         } else {
-            return super.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, type);
+//            Log.i(TAG, "=============" + type);
+            if (type == ViewCompat.TYPE_TOUCH || isLinkedParentFling(dy)) {
+                return super.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, type);
+            } else {
+                return false;
+            }
+        }
+    }
+
+    @Override
+    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
+        return dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, ViewCompat.TYPE_TOUCH);
+    }
+
+    @Override
+    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow, int type) {
+        if (type == ViewCompat.TYPE_TOUCH || isLinkedParentFling(dyUnconsumed)) {
+            return super.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, type);
+        } else {
+            return false;
         }
     }
 
@@ -153,39 +144,5 @@ public class FCRecyclerView extends RecyclerView {
     @Override
     public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
         return super.dispatchNestedFling(velocityX, velocityY, consumed && isCanScrollVertically((int) velocityY));
-    }
-
-    private void createScroller() {
-        try {
-            Field viewFlinger = this.getClass().getSuperclass().getDeclaredField("mViewFlinger");
-            viewFlinger.setAccessible(true);
-            Object viewFlingerObject = viewFlinger.get(this);
-            Class<?> viewFlingerClazz = Class.forName("android.support.v7.widget.RecyclerView$ViewFlinger");
-            if (viewFlingerClazz.isInstance(viewFlingerObject)) {
-                Object scrollerCompatObject = viewFlingerClazz.cast(viewFlingerObject);
-                Field mScrollerCompat = viewFlingerClazz.getDeclaredField("mScroller");
-                mScrollerCompat.setAccessible(true);
-
-                Object scroller = mScrollerCompat.get(scrollerCompatObject);
-                if (scroller instanceof OverScroller) {
-                    overScroller = (OverScroller) scroller;
-                } else if (scroller instanceof ScrollerCompat) {
-                    scrollerCompat = (ScrollerCompat) scroller;
-                }
-
-                Log.d(TAG, "release check ok");
-            }
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            Log.d(TAG, "release check failed->NoSuchFieldException:" + e.toString());
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            Log.d(TAG, "release check failed->IllegalAccessException:" + e.toString());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            Log.d(TAG, "release check failed->ClassNotFoundException:" + e.toString());
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
     }
 }

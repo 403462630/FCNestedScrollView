@@ -40,6 +40,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:0.5'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
     implementation project(":library")
-    compile 'com.fc.nestedscrollview:library:1.1.0'
+//    compile 'com.fc.nestedscrollview:library:1.1.1'
 //    compile 'fc.multi.channel:library:1.1.1'
 }

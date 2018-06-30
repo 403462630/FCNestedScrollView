@@ -2,25 +2,22 @@ package com.fc.nestedscrollview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.view.NestedScrollingParent2;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.OverScroller;
-
-import java.lang.reflect.Field;
-
-import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 /**
  * Created by fangcan on 2018/3/28.
  */
 
-public class FCNestedScrollView extends NestedScrollView {
+public class FCNestedScrollView extends NestedScrollView implements NestedScrollingParent2 {
     private static final String TAG = "FCNestedScrollView";
     public static final int MODEL_ALL = 0; //自己优先滚动
     public static final int MODEL_UP = 1; //自己优先向上滚动
@@ -32,12 +29,12 @@ public class FCNestedScrollView extends NestedScrollView {
     private View targetFlingView;
     private boolean isFling;
 
-    private OverScroller overScroller;
     private int nestedScrollModel = MODEL_ALL;
     /** 当滚到顶或底部的时候 否联动parent滚动 */
     private boolean isLinkedParent;
     /** 当自己滚到顶或底部的时候 否联动child滚动 */
     private boolean isLinkedChild;
+    private boolean isNestedScrolling2Enabled = true;
 
     public FCNestedScrollView(Context context) {
         this(context, null);
@@ -55,8 +52,14 @@ public class FCNestedScrollView extends NestedScrollView {
         isLinkedParent = typedArray.getBoolean(R.styleable.FCNestedScrollView_fc_is_linked_parent, true);
         isLinkedChild = typedArray.getBoolean(R.styleable.FCNestedScrollView_fc_is_linked_child, true);
         typedArray.recycle();
+    }
 
-        createScroller();
+    public boolean isNestedScrolling2Enabled() {
+        return isNestedScrolling2Enabled;
+    }
+
+    public void setNestedScrolling2Enabled(boolean enabled) {
+        this.isNestedScrolling2Enabled = enabled;
     }
 
     public void setLinkChildView(View linkChildView) {
@@ -82,16 +85,6 @@ public class FCNestedScrollView extends NestedScrollView {
 
     public void setLinkedParent(boolean linkedParent) {
         isLinkedParent = linkedParent;
-    }
-
-    /**
-     * 当滚到顶或底部的时候 联动parent滚动
-     */
-    protected boolean linkedParentFling(int velocityY) {
-        startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, TYPE_TOUCH);
-        boolean flag = dispatchNestedPreFling(0, velocityY);
-        stopNestedScroll();
-        return flag;
     }
 
     /**
@@ -145,42 +138,17 @@ public class FCNestedScrollView extends NestedScrollView {
         int dy = top - oldTop;
         if (dy != 0) {
             if (isFling && !canScrollVertically(dy)) {
-                int velocityY;
-                if (dy < 0) {
-                    velocityY = (int) -overScroller.getCurrVelocity();
-                } else {
-                    velocityY = (int) overScroller.getCurrVelocity();
-                }
-                if (velocityY != 0) {
-                    boolean consumedFling = false;
-                    if (isLinkedParentFling(dy)) {
-                        consumedFling = linkedParentFling(velocityY);
-                    }
-                    if (!consumedFling) {
-                        View view = getLinkedFlingView();
-                        if (isLinkedChildFling(dy, view)) {
-                            linkedChildFling(view, velocityY);
-                        }
+                View view = getLinkedFlingView();
+                if (isLinkedChildFling(dy, view)) {
+//                        Log.i(TAG, "onScrollChanged   linkedChildFling ");
+                    int velocityY = (int) FcNestedUtil.getCurrVelocityY(this);
+                    if (velocityY != 0) {
+                        linkedChildFling(view, velocityY);
                     }
                 }
                 isFling = false;
             }
         }
-    }
-
-    @Override
-    public boolean startNestedScroll(int axes) {
-        return super.startNestedScroll(axes);
-    }
-
-    @Override
-    public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-        return super.onStartNestedScroll(child, target, nestedScrollAxes);
-    }
-
-    @Override
-    public void onStopNestedScroll(View target) {
-        super.onStopNestedScroll(target);
     }
 
     @Override
@@ -209,11 +177,7 @@ public class FCNestedScrollView extends NestedScrollView {
 
     @Override
     public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
-        if (isCanScrollVertically(dy)) {
-            return false;
-        } else {
-            return super.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
-        }
+        return dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, ViewCompat.TYPE_TOUCH);
     }
 
     @Override
@@ -221,7 +185,35 @@ public class FCNestedScrollView extends NestedScrollView {
         if (isCanScrollVertically(dy)) {
             return false;
         } else {
-            return super.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, type);
+            if (type == ViewCompat.TYPE_TOUCH) {
+                return super.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, type);
+            } else {
+                if (isLinkedParentFling(dy)) {
+//                    Log.i(TAG, "dispatchNestedPreScroll: type: " + type + ", dy: " + dy);
+                    return super.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, type);
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
+        return dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, ViewCompat.TYPE_TOUCH);
+    }
+
+    @Override
+    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow, int type) {
+        if (type == ViewCompat.TYPE_TOUCH) {
+            return super.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, type);
+        } else {
+           if (isLinkedParentFling(dyUnconsumed)) {
+//                Log.i(TAG, "dispatchNestedScroll: type: " + type + ", dyUnconsumed: " + dyUnconsumed);
+                return super.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, type);
+            } else {
+                return false;
+            }
         }
     }
 
@@ -229,23 +221,7 @@ public class FCNestedScrollView extends NestedScrollView {
     public void fling(int velocityY) {
         super.fling(velocityY);
         isFling = true;
-        Log.i(TAG, toString() + "fling--velocityY: " + velocityY);
-    }
-
-    @Override
-    public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-        //先parent消费
-        super.onNestedPreScroll(target, dx, dy, consumed);
-
-        if (dy != consumed[1] && canScrollVertically(dy)) {
-            scrollBy(0, dy - consumed[1]);//减去parent消费的距离
-            consumed[1] = dy;
-        }
-    }
-
-    @Override
-    public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-        super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
+//        Log.i(TAG, toString() + "fling--velocityY: " + velocityY);
     }
 
     @Override
@@ -269,20 +245,64 @@ public class FCNestedScrollView extends NestedScrollView {
                 onNestedFling(target, velocityX, velocityY, false);
             }
         }
-        Log.i(TAG, "onNestedPreFling " + flag);
+//        Log.i(TAG, "onNestedPreFling " + flag);
         return flag;
     }
 
-    private void createScroller() {
-        try {
-            Field field = getClass().getSuperclass().getDeclaredField("mScroller");
-            field.setAccessible(true);
-            Object object = field.get(this);
-            if (object instanceof OverScroller) {
-                overScroller = (OverScroller) object;
+    @Override
+    public boolean onStartNestedScroll(@NonNull View child, @NonNull View target, int axes, int type) {
+        if (type == ViewCompat.TYPE_TOUCH) {
+            return onStartNestedScroll(child, target, axes);
+        } else {
+            return isNestedScrolling2Enabled() ? onStartNestedScroll(child, target, axes) : false;
+        }
+    }
+
+    @Override
+    public void onNestedScrollAccepted(@NonNull View child, @NonNull View target, int axes, int type) {
+        if (type == ViewCompat.TYPE_TOUCH) {
+            onNestedScrollAccepted(child, target, axes);
+        } else {
+            if (isNestedScrolling2Enabled()) {
+                onNestedScrollAccepted(child, target, axes);
             }
-        } catch (Throwable e) {
-            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStopNestedScroll(@NonNull View target, int type) {
+        onStopNestedScroll(target);
+    }
+
+    @Override
+    public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
+        onNestedPreScroll(target, dx, dy, consumed, ViewCompat.TYPE_TOUCH);
+    }
+
+    @Override
+    public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+        onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, ViewCompat.TYPE_TOUCH);
+    }
+
+    @Override
+    public void onNestedScroll(@NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
+        if (type == ViewCompat.TYPE_TOUCH || isNestedScrolling2Enabled()) {
+            final int oldScrollY = getScrollY();
+            scrollBy(0, dyUnconsumed);
+            final int myConsumed = getScrollY() - oldScrollY;
+            final int myUnconsumed = dyUnconsumed - myConsumed;
+            dispatchNestedScroll(0, myConsumed, 0, myUnconsumed, null, type);
+        }
+    }
+
+    @Override
+    public void onNestedPreScroll(@NonNull View target, int dx, int dy, @Nullable int[] consumed, int type) {
+        if (type == ViewCompat.TYPE_TOUCH || isNestedScrolling2Enabled()) {
+            dispatchNestedPreScroll(dx, dy, consumed, null, type);
+            if (dy != consumed[1] && canScrollVertically(dy)) {
+                scrollBy(0, dy - consumed[1]);//减去parent消费的距离
+                consumed[1] = dy;
+            }
         }
     }
 }

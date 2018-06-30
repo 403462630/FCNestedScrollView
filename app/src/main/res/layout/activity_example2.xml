@@ -13,7 +13,7 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="700dp"
-            android:paddingBottom="100dp">
+            android:paddingBottom="300dp">
 
             <TextView
                 android:layout_width="match_parent"
