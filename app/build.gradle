@@ -42,4 +42,5 @@ dependencies {
     implementation project(":library")
 //    compile 'com.fc.nestedscrollview:library:1.1.1'
 //    compile 'fc.multi.channel:library:1.1.1'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_container"
+    android:background="#ffffff"
+    android:layout_width="match_parent"
+    android:clickable="true"
+    android:layout_height="51dp">
+
+    <View
+        android:id="@+id/v_bottom_cut_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="12dp"
+        android:background="#eaeaea"/>
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingLeft="15dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxWidth="135dp"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        tools:text="item1" />
+
+    <ImageView
+        android:id="@+id/iv_drag"
+        android:layout_width="36dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerInside"
+        android:src="@mipmap/ic_drag" />
+</RelativeLayout>
