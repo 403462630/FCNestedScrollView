@@ -16,7 +16,7 @@ class MyDraggerRecyclerAdapter(data: List<String>) : BaseItemDraggableAdapter<St
         helper!!.setText(R.id.tv_content, item)
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         super.onBindViewHolder(holder, position)
         (holder as MyViewHolder).bindData(position, getItem(position)!!)
     }

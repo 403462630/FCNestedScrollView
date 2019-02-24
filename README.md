@@ -19,7 +19,10 @@ maven {
 gradle依赖
 
 ```
-compile 'com.fc.nestedscrollview:library:1.2.0'
+// support version 大于等于28，请使用1.3.0
+compile 'com.fc.nestedscrollview:library:1.3.0'
+// support version 低于等于27，请使用1.2.0
+// compile 'com.fc.nestedscrollview:library:1.2.0'
 
 ```
 

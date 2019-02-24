@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.item_my.*
  */
 class MyRecyclerAdapter(var text: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return MyViewHolder(LayoutInflater.from(parent!!.context).inflate(R.layout.item_my, parent, false))
     }
 
@@ -21,13 +21,13 @@ class MyRecyclerAdapter(var text: String) : RecyclerView.Adapter<RecyclerView.Vi
         return 20
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as MyViewHolder).bindData(position, text)
     }
 
 
     @ContainerOptions
-    class MyViewHolder(override val containerView: View?) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    class MyViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bindData(position: Int, text: String) {
             tv_text.text = text + "_" + position

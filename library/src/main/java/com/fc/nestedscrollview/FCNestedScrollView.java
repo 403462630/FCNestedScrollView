@@ -175,10 +175,10 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
         return super.dispatchNestedFling(velocityX, velocityY, consumed);
     }
 
-    @Override
-    public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
-        return dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, ViewCompat.TYPE_TOUCH);
-    }
+//    @Override
+//    public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
+//        return dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, ViewCompat.TYPE_TOUCH);
+//    }
 
     @Override
     public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow, int type) {
@@ -198,10 +198,10 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
         }
     }
 
-    @Override
-    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
-        return dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, ViewCompat.TYPE_TOUCH);
-    }
+//    @Override
+//    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
+//        return dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, ViewCompat.TYPE_TOUCH);
+//    }
 
     @Override
     public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow, int type) {
@@ -249,40 +249,40 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
         return flag;
     }
 
-    @Override
-    public boolean onStartNestedScroll(@NonNull View child, @NonNull View target, int axes, int type) {
-        if (type == ViewCompat.TYPE_TOUCH) {
-            return onStartNestedScroll(child, target, axes);
-        } else {
-            return isNestedScrolling2Enabled() ? onStartNestedScroll(child, target, axes) : false;
-        }
-    }
+//    @Override
+//    public boolean onStartNestedScroll(@NonNull View child, @NonNull View target, int axes, int type) {
+//        if (type == ViewCompat.TYPE_TOUCH) {
+//            return (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
+//        } else {
+//            return isNestedScrolling2Enabled() ? (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0 : false;
+//        }
+//    }
+//
+//    @Override
+//    public void onNestedScrollAccepted(@NonNull View child, @NonNull View target, int axes, int type) {
+//        if (type == ViewCompat.TYPE_TOUCH) {
+//            onNestedScrollAccepted(child, target, axes);
+//        } else {
+//            if (isNestedScrolling2Enabled()) {
+//                onNestedScrollAccepted(child, target, axes);
+//            }
+//        }
+//    }
 
-    @Override
-    public void onNestedScrollAccepted(@NonNull View child, @NonNull View target, int axes, int type) {
-        if (type == ViewCompat.TYPE_TOUCH) {
-            onNestedScrollAccepted(child, target, axes);
-        } else {
-            if (isNestedScrolling2Enabled()) {
-                onNestedScrollAccepted(child, target, axes);
-            }
-        }
-    }
+//    @Override
+//    public void onStopNestedScroll(@NonNull View target, int type) {
+//        onStopNestedScroll(target);
+//    }
 
-    @Override
-    public void onStopNestedScroll(@NonNull View target, int type) {
-        onStopNestedScroll(target);
-    }
+//    @Override
+//    public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
+//        onNestedPreScroll(target, dx, dy, consumed, ViewCompat.TYPE_TOUCH);
+//    }
 
-    @Override
-    public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-        onNestedPreScroll(target, dx, dy, consumed, ViewCompat.TYPE_TOUCH);
-    }
-
-    @Override
-    public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-        onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, ViewCompat.TYPE_TOUCH);
-    }
+//    @Override
+//    public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+//        onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, ViewCompat.TYPE_TOUCH);
+//    }
 
     @Override
     public void onNestedScroll(@NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {

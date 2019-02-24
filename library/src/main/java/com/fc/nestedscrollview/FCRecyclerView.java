@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.ScrollerCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewParent;
 import android.widget.OverScroller;
 
 import java.lang.reflect.Field;
@@ -28,6 +31,8 @@ public class FCRecyclerView extends RecyclerView {
     private int nestedScrollModel = MODEL_ALL;
     /** 当滚到顶或底部的时候 否联动parent滚动 */
     private boolean isLinkedParent;
+    private boolean isDraggingItem = false;
+    private NestedScrollView nestedScrollView;
 
     public FCRecyclerView(Context context) {
         this(context, null);
@@ -54,11 +59,39 @@ public class FCRecyclerView extends RecyclerView {
         this.nestedScrollModel = nestedScrollModel;
     }
 
+    public boolean isDraggingItem() {
+        return isDraggingItem;
+    }
+
+    public void setDraggingItem(boolean draggingItem) {
+        isDraggingItem = draggingItem;
+    }
+
+    private NestedScrollView initNestedScrollView() {
+        ViewParent view = getParent();
+        while (view != null) {
+            if (view instanceof NestedScrollView) {
+                nestedScrollView = (NestedScrollView) view;
+            }
+            view = view.getParent();
+        }
+        return null;
+    }
+
     @Override
-    public boolean fling(int velocityX, int velocityY) {
-        boolean flag = super.fling(velocityX, velocityY);
-        FcNestedUtil.getCurrVelocityXY(this);
-        return flag;
+    public void scrollBy(int x, int y) {
+        if (isDraggingItem()) {
+            if (nestedScrollView == null) {
+                initNestedScrollView();
+            }
+            if (nestedScrollView != null) {
+                nestedScrollView.scrollBy(x, y);
+            } else {
+                super.scrollBy(x, y);
+            }
+        } else {
+            super.scrollBy(x, y);
+        }
     }
 
     /**

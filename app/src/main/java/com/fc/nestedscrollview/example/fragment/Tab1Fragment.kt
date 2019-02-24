@@ -29,7 +29,7 @@ class Tab1Fragment : Fragment() {
     private var mItemTouchHelper: ItemTouchHelper? = null
     private var mItemDragAndSwipeCallback: ItemDragAndSwipeCallback? = null
     private var nestedScrollView: NestedScrollView? = null
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return return inflater!!.inflate(R.layout.fragment_tab1, container, false)
     }
 
@@ -88,18 +88,18 @@ class Tab1Fragment : Fragment() {
         return null
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         nestedScrollView = findNestedScrollView(recycler_view)
         itemDragAdapter = MyDraggerRecyclerAdapter(generateData(50))
         mItemDragAndSwipeCallback = object: ItemDragAndSwipeCallback(itemDragAdapter) {
-            override fun onMoved(recyclerView: RecyclerView?, source: RecyclerView.ViewHolder?, fromPos: Int, target: RecyclerView.ViewHolder?, toPos: Int, x: Int, y: Int) {
+            override fun onMoved(recyclerView: RecyclerView, source: RecyclerView.ViewHolder, fromPos: Int, target: RecyclerView.ViewHolder, toPos: Int, x: Int, y: Int) {
                 super.onMoved(recyclerView, source, fromPos, target, toPos, x, y)
                 ifNeedScrollToBottomOrTop(recyclerView!!, source!!, y)
             }
         }
-        mItemTouchHelper = ItemTouchHelper(mItemDragAndSwipeCallback)
+        mItemTouchHelper = ItemTouchHelper(mItemDragAndSwipeCallback!!)
         mItemTouchHelper!!.attachToRecyclerView(recycler_view)
         itemDragAdapter!!.enableDragItem(mItemTouchHelper!!)
         itemDragAdapter!!.setOnItemDragListener(onItemDragListener)
