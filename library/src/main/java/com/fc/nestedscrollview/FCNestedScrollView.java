@@ -13,6 +13,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
+
 /**
  * Created by fangcan on 2018/3/28.
  */
@@ -35,6 +38,20 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
     /** 当自己滚到顶或底部的时候 否联动child滚动 */
     private boolean isLinkedChild;
     private boolean isNestedScrolling2Enabled = true;
+    private CopyOnWriteArraySet<OnScrollChangeListener> listeners = new CopyOnWriteArraySet<>();
+
+    private NestedScrollView.OnScrollChangeListener defaultListener = new OnScrollChangeListener() {
+        @Override
+        public void onScrollChange(NestedScrollView nestedScrollView, int i, int i1, int i2, int i3) {
+            if (listeners != null && !listeners.isEmpty()) {
+                for (NestedScrollView.OnScrollChangeListener listener : listeners) {
+                    if (listener != null) {
+                        listener.onScrollChange(nestedScrollView, i, i1, i2, i3);
+                    }
+                }
+            }
+        }
+    };
 
     public FCNestedScrollView(Context context) {
         this(context, null);
@@ -52,6 +69,18 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
         isLinkedParent = typedArray.getBoolean(R.styleable.FCNestedScrollView_fc_is_linked_parent, true);
         isLinkedChild = typedArray.getBoolean(R.styleable.FCNestedScrollView_fc_is_linked_child, true);
         typedArray.recycle();
+
+        setOnScrollChangeListener(defaultListener);
+    }
+
+    public void addOnScrollChangeListener(NestedScrollView.OnScrollChangeListener listener) {
+        if (listener != null) {
+            listeners.add(listener);
+        }
+    }
+
+    public void removeOnScrollChangeListener(NestedScrollView.OnScrollChangeListener listener) {
+        listeners.remove(listener);
     }
 
     public boolean isNestedScrolling2Enabled() {

@@ -2,6 +2,8 @@ package com.fc.nestedscrollview.example
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_example1.*
 
@@ -30,6 +32,7 @@ class Example1Activity : AppCompatActivity() {
             adapter = myAdapter2
         }
 
+//        recycler_view3.isDraggingItem = true
         recycler_view3.apply {
             layoutManager = LinearLayoutManager(this@Example1Activity)
             adapter = myAdapter3
@@ -38,6 +41,11 @@ class Example1Activity : AppCompatActivity() {
         recycler_view4.apply {
             layoutManager = LinearLayoutManager(this@Example1Activity)
             adapter = myAdapter4
+        }
+
+        tv_scroll_by.setOnClickListener {
+            recycler_view3.nestedScrollBy(100)
+//            recycler_view3.scrollBy(0, 100)
         }
     }
 }

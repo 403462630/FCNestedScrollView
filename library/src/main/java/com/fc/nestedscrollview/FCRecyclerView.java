@@ -2,6 +2,7 @@ package com.fc.nestedscrollview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -33,6 +34,8 @@ public class FCRecyclerView extends RecyclerView {
     private boolean isLinkedParent;
     private boolean isDraggingItem = false;
     private NestedScrollView nestedScrollView;
+    private Handler handler = new Handler();
+    private boolean isNestedScrollBy = false;
 
     public FCRecyclerView(Context context) {
         this(context, null);
@@ -65,6 +68,22 @@ public class FCRecyclerView extends RecyclerView {
 
     public void setDraggingItem(boolean draggingItem) {
         isDraggingItem = draggingItem;
+    }
+
+    @Override
+    public void onScrollStateChanged(int state) {
+        super.onScrollStateChanged(state);
+        Log.i("onScrollStateChanged", "" + state);
+        if (isNestedScrollBy == true && state == RecyclerView.SCROLL_STATE_IDLE) {
+            isNestedScrollBy = false;
+            stopNestedScroll(ViewCompat.TYPE_NON_TOUCH);
+        }
+    }
+
+    public void nestedScrollBy(int dy) {
+        isNestedScrollBy = true;
+        startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, ViewCompat.TYPE_NON_TOUCH);
+        smoothScrollBy(0, dy);
     }
 
     private NestedScrollView initNestedScrollView() {
