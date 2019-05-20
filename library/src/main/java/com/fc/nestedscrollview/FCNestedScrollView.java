@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.OverScroller;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -38,7 +39,31 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
     /** 当自己滚到顶或底部的时候 否联动child滚动 */
     private boolean isLinkedChild;
     private boolean isNestedScrolling2Enabled = true;
+
     private CopyOnWriteArraySet<OnScrollChangeListener> listeners = new CopyOnWriteArraySet<>();
+    private OnScrollStateListener onScrollStateListener;
+
+    private long lastScrollUpdate = -1;
+    private int scrollTaskInterval = 100;
+    private boolean isTouched = false;
+    private Runnable scrollingRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!isTouched && (System.currentTimeMillis() - lastScrollUpdate) > scrollTaskInterval) {
+                // Scrolling has stopped.
+                lastScrollUpdate = -1;
+                if (onScrollStateListener != null) {
+                    onScrollStateListener.onScrollEnd();
+                }
+            } else {
+                postDelayed(this, scrollTaskInterval);
+            }
+        }
+    };
+
+    public void setOnScrollStateListener(OnScrollStateListener onScrollStateListener) {
+        this.onScrollStateListener = onScrollStateListener;
+    }
 
     private NestedScrollView.OnScrollChangeListener defaultListener = new OnScrollChangeListener() {
         @Override
@@ -178,13 +203,24 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
                 isFling = false;
             }
         }
+
+        if (onScrollStateListener != null) {
+            if (lastScrollUpdate == -1) {
+                onScrollStateListener.onScrollStart();
+                postDelayed(scrollingRunnable, scrollTaskInterval);
+            }
+            lastScrollUpdate = System.currentTimeMillis();
+        }
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            isTouched = true;
             targetFlingView = null;
             isFling = false;
+        } else if (ev.getAction() == MotionEvent.ACTION_UP) {
+            isTouched = false;
         }
         return super.onInterceptTouchEvent(ev);
     }
@@ -333,5 +369,10 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
                 consumed[1] = dy;
             }
         }
+    }
+
+    public static interface OnScrollStateListener {
+        public void onScrollStart();
+        public void onScrollEnd();
     }
 }
