@@ -37,6 +37,13 @@ public class FCRecyclerView extends RecyclerView {
     private Handler handler = new Handler();
     private boolean isNestedScrollBy = false;
 
+    private boolean isStartScroll = false;
+    private OnScrollStateListener onScrollStateListener;
+
+    public void setOnScrollStateListener(OnScrollStateListener onScrollStateListener) {
+        this.onScrollStateListener = onScrollStateListener;
+    }
+
     public FCRecyclerView(Context context) {
         this(context, null);
     }
@@ -78,12 +85,31 @@ public class FCRecyclerView extends RecyclerView {
             isNestedScrollBy = false;
             stopNestedScroll(ViewCompat.TYPE_NON_TOUCH);
         }
+        if (onScrollStateListener != null) {
+            if (state == RecyclerView.SCROLL_STATE_DRAGGING || state == RecyclerView.SCROLL_STATE_SETTLING) {
+                if (!isStartScroll) {
+                    isStartScroll = true;
+                    onScrollStateListener.onScrollStart();
+                }
+            } else if (state == RecyclerView.SCROLL_STATE_IDLE) {
+                if (isStartScroll) {
+                    isStartScroll = false;
+                    onScrollStateListener.onScrollEnd();
+                }
+            }
+        }
     }
 
     public void nestedScrollBy(int dy) {
         isNestedScrollBy = true;
         startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, ViewCompat.TYPE_NON_TOUCH);
         smoothScrollBy(0, dy);
+    }
+
+    public void nestedScrollToPosition(int position) {
+        isNestedScrollBy = true;
+        startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, ViewCompat.TYPE_NON_TOUCH);
+        scrollToPosition(position);
     }
 
     private NestedScrollView initNestedScrollView() {

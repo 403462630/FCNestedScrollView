@@ -49,7 +49,8 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
     private Runnable scrollingRunnable = new Runnable() {
         @Override
         public void run() {
-            if (!isTouched && (System.currentTimeMillis() - lastScrollUpdate) > scrollTaskInterval) {
+            long time = System.currentTimeMillis() - lastScrollUpdate;
+            if ((!isTouched && time > scrollTaskInterval) || time > scrollTaskInterval * 3) {
                 // Scrolling has stopped.
                 lastScrollUpdate = -1;
                 if (onScrollStateListener != null) {
@@ -214,11 +215,21 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
     }
 
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
+    public boolean onTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             isTouched = true;
+        } else if (ev.getAction() == MotionEvent.ACTION_UP) {
+            isTouched = false;
+        }
+        return super.onTouchEvent(ev);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             targetFlingView = null;
             isFling = false;
+            isTouched = true;
         } else if (ev.getAction() == MotionEvent.ACTION_UP) {
             isTouched = false;
         }
@@ -369,10 +380,5 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
                 consumed[1] = dy;
             }
         }
-    }
-
-    public static interface OnScrollStateListener {
-        public void onScrollStart();
-        public void onScrollEnd();
     }
 }
