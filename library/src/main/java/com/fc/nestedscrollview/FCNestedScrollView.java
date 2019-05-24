@@ -247,8 +247,18 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
 
     @Override
     public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
-        isFling = velocityY != 0;
-        return super.dispatchNestedFling(velocityX, velocityY, consumed);
+        isFling = velocityY != 0 && canScrollVertically((int) velocityY);
+        if (!isFling && !consumed) {
+            View view = getLinkedFlingView();
+            if (isLinkedChildFling((int) velocityY, view)) {
+                linkedChildFling(view, (int) velocityY);
+                return false;
+            } else {
+                return super.dispatchNestedFling(velocityX, velocityY, consumed);
+            }
+        } else {
+            return super.dispatchNestedFling(velocityX, velocityY, consumed);
+        }
     }
 
 //    @Override
@@ -304,6 +314,13 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
         targetFlingView = target;
         isFling = true;
+        if (!consumed && !canScrollVertically((int) velocityY)) {
+            View view = getLinkedFlingView();
+            if (isLinkedChildFling((int) velocityY, view)) {
+                linkedChildFling(view, (int) velocityY);
+                return true;
+            }
+        }
         return super.onNestedFling(target, velocityX, velocityY, consumed);
     }
 

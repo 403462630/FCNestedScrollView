@@ -221,6 +221,8 @@ public class FCRecyclerView extends RecyclerView {
 
     @Override
     public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
-        return super.dispatchNestedFling(velocityX, velocityY, consumed && isCanScrollVertically((int) velocityY));
+//        return super.dispatchNestedFling(velocityX, velocityY, consumed && isCanScrollVertically((int) velocityY));
+        return super.dispatchNestedFling(velocityX, velocityY, consumed);
+
     }
 }
