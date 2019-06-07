@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep class android.support.v7.widget.RecyclerView{*;}
+-keep class android.support.v4.widget.NestedScrollView{*;}
+
+-keep class androidx.recyclerview.widget.RecyclerView{*;}
+-keep class androidx.core.widget.NestedScrollView{*;}
+
+#-keep class android.widget.OverScroller{*;}

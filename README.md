@@ -19,10 +19,13 @@ maven {
 gradle依赖
 
 ```
+// androidx support
+implementation 'fc.nestedscrollview.androidx:library:1.0.0'
+
 // support version 大于等于28，请使用1.3.3
-compile 'com.fc.nestedscrollview:library:1.3.4'
+implementation 'com.fc.nestedscrollview:library:1.3.4'
 // support version 低于等于27，请使用1.2.0
-// compile 'com.fc.nestedscrollview:library:1.2.0'
+// implementation 'com.fc.nestedscrollview:library:1.2.0'
 
 ```
 
@@ -72,43 +75,53 @@ compile 'com.fc.nestedscrollview:library:1.3.4'
 - true 下拉时，优先处理下拉刷新
 - false (默认)下拉时，最后处理下拉刷新
 
+## Example
+
 ```
-<com.fc.nestedscrollview.FCNestedScrollView
-    android:layout_width="150dp"
-    android:layout_height="200dp"
-    app:fc_scroll_mode="all">
-    
-	...
+<com.fc.nestedscrollview.FCNestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nested_scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- some view -->
+		......
+
+
+		<!--
+			1. 要么在xml里定高
+			2. 要么在代码中定高
+			fc_scroll_mode 是配置 滚动模式，具体参数的值参考 wiki
+		 -->
+		<com.fc.nestedscrollview.FCRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="150dp"
+            android:layout_height="200dp"
+            app:fc_scroll_mode="all" />
+
+    </LinearLayout>
 </com.fc.nestedscrollview.FCNestedScrollView>
 
 ```
 
-```
-<com.fc.nestedscrollview.FCRecyclerView
-    android:layout_width="150dp"
-    android:layout_height="200dp"
-    app:fc_scroll_mode="all">
-</com.fc.nestedscrollview.FCRecyclerView>
+## 混淆
 
 ```
+# support package
+-keep class android.support.v7.widget.RecyclerView{*;}
+-keep class android.support.v4.widget.NestedScrollView{*;}
+
+# androidx package
+-keep class androidx.recyclerview.widget.RecyclerView{*;}
+-keep class androidx.core.widget.NestedScrollView{*;}
 
 ```
-<com.fc.nestedscrollview.FCWebView
-    android:layout_width="150dp"
-    android:layout_height="200dp"
-    app:fc_scroll_mode="all">
-</com.fc.nestedscrollview.FCWebView>
-
-```
-
-```
-<com.fc.nestedscrollview.FCSwipeRefreshLayout
-    android:layout_width="150dp"
-    android:layout_height="200dp">
-</com.fc.nestedscrollview.FCSwipeRefreshLayout>
-
-```
-
 
 
 

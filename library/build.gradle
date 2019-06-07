@@ -1,14 +1,13 @@
 apply plugin: 'com.android.library'
 
 ext {
-    projectName = "FCNestedScrollView"
-//    artifactId = "nestedscrollview"
+    projectName = "AndroidXFCNestedScrollView"
 }
 
 apply from: "../bintray.gradle"
 
-group="com.fc.nestedscrollview"
-version="1.4.0"
+group="fc.nestedscrollview.androidx"
+version="1.0.0"
 
 android {
     compileSdkVersion 28
