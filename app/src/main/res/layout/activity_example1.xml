@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="700dp"
         android:paddingBottom="300dp">
@@ -103,5 +103,5 @@
             app:layout_constraintTop_toTopOf="parent">
 
         </com.fc.nestedscrollview.FCRecyclerView>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.fc.nestedscrollview.FCNestedScrollView>

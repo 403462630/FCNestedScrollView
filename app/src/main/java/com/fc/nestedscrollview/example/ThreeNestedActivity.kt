@@ -1,8 +1,8 @@
 package com.fc.nestedscrollview.example
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_three.*
 
 class ThreeNestedActivity : AppCompatActivity() {

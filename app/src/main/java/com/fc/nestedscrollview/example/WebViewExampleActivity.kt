@@ -1,10 +1,10 @@
 package com.fc.nestedscrollview.example
 
 import android.annotation.SuppressLint
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_example_webview.*
 
 class WebViewExampleActivity : AppCompatActivity() {

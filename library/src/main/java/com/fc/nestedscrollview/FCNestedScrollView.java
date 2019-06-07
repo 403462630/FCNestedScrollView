@@ -2,26 +2,25 @@ package com.fc.nestedscrollview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.NestedScrollingParent2;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.OverScroller;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.NestedScrollingParent2;
+import androidx.core.view.ViewCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Created by fangcan on 2018/3/28.
  */
 
-public class FCNestedScrollView extends NestedScrollView implements NestedScrollingParent2 {
+public class FCNestedScrollView extends NestedScrollView {
     private static final String TAG = "FCNestedScrollView";
     public static final int MODEL_ALL = 0; //自己优先滚动
     public static final int MODEL_UP = 1; //自己优先向上滚动

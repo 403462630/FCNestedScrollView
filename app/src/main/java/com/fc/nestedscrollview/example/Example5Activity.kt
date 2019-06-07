@@ -1,13 +1,13 @@
 package com.fc.nestedscrollview.example
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import com.fc.nestedscrollview.example.fragment.Tab1Fragment
 import com.fc.nestedscrollview.example.fragment.Tab2Fragment
 import com.fc.nestedscrollview.example.fragment.Tab3Fragment

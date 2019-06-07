@@ -3,20 +3,14 @@ package com.fc.nestedscrollview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v4.widget.ScrollerCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewParent;
-import android.widget.OverScroller;
 
-import java.lang.reflect.Field;
-
-import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
+import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by fangcan on 2018/3/28.
