@@ -41,7 +41,7 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
     private boolean isNestedScrolling2Enabled = true;
 
     private CopyOnWriteArraySet<OnScrollChangeListener> listeners = new CopyOnWriteArraySet<>();
-    private OnScrollStateListener onScrollStateListener;
+    private CopyOnWriteArraySet<OnScrollStateListener> onScrollStateListeners = new CopyOnWriteArraySet<>();
 
     private long lastScrollUpdate = -1;
     private int scrollTaskInterval = 100;
@@ -53,17 +53,19 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
             if ((!isTouched && time > scrollTaskInterval) || time > scrollTaskInterval * 3) {
                 // Scrolling has stopped.
                 lastScrollUpdate = -1;
-                if (onScrollStateListener != null) {
-                    onScrollStateListener.onScrollEnd();
-                }
+                notifyScrollEnd();
             } else {
                 postDelayed(this, scrollTaskInterval);
             }
         }
     };
 
-    public void setOnScrollStateListener(OnScrollStateListener onScrollStateListener) {
-        this.onScrollStateListener = onScrollStateListener;
+    public void addOnScrollStateListener(OnScrollStateListener onScrollStateListener) {
+        onScrollStateListeners.add(onScrollStateListener);
+    }
+
+    public void removeOnScrollStateListener(OnScrollStateListener onScrollStateListener) {
+        onScrollStateListeners.remove(onScrollStateListener);
     }
 
     private NestedScrollView.OnScrollChangeListener defaultListener = new OnScrollChangeListener() {
@@ -107,6 +109,18 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
 
     public void removeOnScrollChangeListener(NestedScrollView.OnScrollChangeListener listener) {
         listeners.remove(listener);
+    }
+
+    private void notifyScrollStart() {
+        for (OnScrollStateListener onScrollStateListener : onScrollStateListeners) {
+            onScrollStateListener.onScrollStart();
+        }
+    }
+
+    private void notifyScrollEnd() {
+        for (OnScrollStateListener onScrollStateListener : onScrollStateListeners) {
+            onScrollStateListener.onScrollEnd();
+        }
     }
 
     public boolean isNestedScrolling2Enabled() {
@@ -205,9 +219,9 @@ public class FCNestedScrollView extends NestedScrollView implements NestedScroll
             }
         }
 
-        if (onScrollStateListener != null) {
+        if (!onScrollStateListeners.isEmpty()) {
             if (lastScrollUpdate == -1) {
-                onScrollStateListener.onScrollStart();
+                notifyScrollStart();
                 postDelayed(scrollingRunnable, scrollTaskInterval);
             }
             lastScrollUpdate = System.currentTimeMillis();

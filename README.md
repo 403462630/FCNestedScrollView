@@ -19,8 +19,11 @@ maven {
 gradle依赖
 
 ```
+// androidx support
+implementation 'fc.nestedscrollview.androidx:library:1.0.1'
+
 // support version 大于等于28，请使用1.3.3
-compile 'com.fc.nestedscrollview:library:1.3.4'
+compile 'com.fc.nestedscrollview:library:1.4.0'
 // support version 低于等于27，请使用1.2.0
 // compile 'com.fc.nestedscrollview:library:1.2.0'
 
