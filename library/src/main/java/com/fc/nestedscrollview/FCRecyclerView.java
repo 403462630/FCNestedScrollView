@@ -12,6 +12,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.concurrent.CopyOnWriteArraySet;
+
 /**
  * Created by fangcan on 2018/3/28.
  */
@@ -32,10 +34,14 @@ public class FCRecyclerView extends RecyclerView {
     private boolean isNestedScrollBy = false;
 
     private boolean isStartScroll = false;
-    private OnScrollStateListener onScrollStateListener;
+    private CopyOnWriteArraySet<OnScrollStateListener> onScrollStateListeners = new CopyOnWriteArraySet<>();
 
-    public void setOnScrollStateListener(OnScrollStateListener onScrollStateListener) {
-        this.onScrollStateListener = onScrollStateListener;
+    public void addOnScrollStateListener(OnScrollStateListener onScrollStateListener) {
+        onScrollStateListeners.add(onScrollStateListener);
+    }
+
+    public void removeOnScrollStateListener(OnScrollStateListener onScrollStateListener) {
+        onScrollStateListeners.remove(onScrollStateListener);
     }
 
     public FCRecyclerView(Context context) {
@@ -53,6 +59,18 @@ public class FCRecyclerView extends RecyclerView {
         nestedScrollModel = typedArray.getInt(R.styleable.FCRecyclerView_fc_scroll_mode, MODEL_ALL);
         isLinkedParent = typedArray.getBoolean(R.styleable.FCRecyclerView_fc_is_linked_parent, true);
         typedArray.recycle();
+    }
+
+    private void notifyScrollStart() {
+        for (OnScrollStateListener onScrollStateListener : onScrollStateListeners) {
+            onScrollStateListener.onScrollStart();
+        }
+    }
+
+    private void notifyScrollEnd() {
+        for (OnScrollStateListener onScrollStateListener : onScrollStateListeners) {
+            onScrollStateListener.onScrollEnd();
+        }
     }
 
     public int getNestedScrollModel() {
@@ -79,16 +97,16 @@ public class FCRecyclerView extends RecyclerView {
             isNestedScrollBy = false;
             stopNestedScroll(ViewCompat.TYPE_NON_TOUCH);
         }
-        if (onScrollStateListener != null) {
+        if (!onScrollStateListeners.isEmpty()) {
             if (state == RecyclerView.SCROLL_STATE_DRAGGING || state == RecyclerView.SCROLL_STATE_SETTLING) {
                 if (!isStartScroll) {
                     isStartScroll = true;
-                    onScrollStateListener.onScrollStart();
+                    notifyScrollStart();
                 }
             } else if (state == RecyclerView.SCROLL_STATE_IDLE) {
                 if (isStartScroll) {
                     isStartScroll = false;
-                    onScrollStateListener.onScrollEnd();
+                    notifyScrollEnd();
                 }
             }
         }
