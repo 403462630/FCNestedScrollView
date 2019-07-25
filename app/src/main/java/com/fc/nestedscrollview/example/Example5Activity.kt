@@ -18,7 +18,8 @@ class Example5Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example5)
-
+        nested_scroll_view.logId = "parent"
+        nested_scroll_view.enableLog = true
         nested_scroll_view.viewTreeObserver.addOnGlobalLayoutListener (object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 var height = nested_scroll_view.height

@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.ViewParent;
 
 import androidx.annotation.Nullable;
@@ -12,6 +13,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -32,6 +34,11 @@ public class FCRecyclerView extends RecyclerView {
     private NestedScrollView nestedScrollView;
     private Handler handler = new Handler();
     private boolean isNestedScrollBy = false;
+    // 测试看日志专用
+    public boolean enableLog;
+    private String uuid;
+
+    public int lastDy;
 
     private boolean isStartScroll = false;
     private CopyOnWriteArraySet<OnScrollStateListener> onScrollStateListeners = new CopyOnWriteArraySet<>();
@@ -54,7 +61,7 @@ public class FCRecyclerView extends RecyclerView {
 
     public FCRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
+        uuid = UUID.randomUUID().toString();
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.FCRecyclerView);
         nestedScrollModel = typedArray.getInt(R.styleable.FCRecyclerView_fc_scroll_mode, MODEL_ALL);
         isLinkedParent = typedArray.getBoolean(R.styleable.FCRecyclerView_fc_is_linked_parent, true);
@@ -151,6 +158,12 @@ public class FCRecyclerView extends RecyclerView {
         }
     }
 
+    @Override
+    public boolean fling(int velocityX, int velocityY) {
+        log("fling: velocityY " + velocityY);
+        return super.fling(velocityX, velocityY);
+    }
+
     /**
      * 当滚到顶或底部的时候 否联动parent滚动
      * @param direction < 0 向下滚，> 0 向上滚
@@ -184,40 +197,78 @@ public class FCRecyclerView extends RecyclerView {
     }
 
     @Override
-    public boolean startNestedScroll(int axes) {
-        return super.startNestedScroll(axes);
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            lastDy = 0;
+        }
+        return super.onTouchEvent(ev);
     }
 
     @Override
-    public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
-        return dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, ViewCompat.TYPE_TOUCH);
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            lastDy = 0;
+        }
+        return super.onInterceptTouchEvent(ev);
+    }
+
+    @Override
+    public boolean startNestedScroll(int axes, int type) {
+        log("startNestedScroll: axes " + axes + ", type " + type);
+        lastDy = 0;
+        return super.startNestedScroll(axes, type);
+    }
+
+    @Override
+    public void stopNestedScroll(int type) {
+        log("stopNestedScroll: type " + type);
+        super.stopNestedScroll(type);
+        lastDy = 0;
+    }
+
+    @Override
+    public boolean hasNestedScrollingParent(int type) {
+        boolean flag = super.hasNestedScrollingParent(type);
+        log("hasNestedScrollingParent: " + flag);
+        return flag;
     }
 
     @Override
     public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow, int type) {
+        if (!isNestedScrollingEnabled()) return false;
 //        Log.i(TAG, "dispatchNestedPreScroll: " + type);
+        lastDy = dy;
         if (isCanScrollVertically(dy)) {
+            if (enableLog) {
+                log("dispatchNestedPreScroll: false-自己消费1, dy " + dy + ", consumed(" + consumed[0] + ", " + consumed[1] + "), type " + type);
+            }
             return false;
         } else {
-//            Log.i(TAG, "=============" + type);
             if (type == ViewCompat.TYPE_TOUCH || isLinkedParentFling(dy)) {
+                if (enableLog) {
+                    log("dispatchNestedPreScroll: dy " + dy + ", consumed(" + consumed[0] + ", " + consumed[1] + "), type " + type);
+                }
                 return super.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, type);
             } else {
+                if (enableLog) {
+                    log("dispatchNestedPreScroll: false-自己消费2, dy " + dy + ", consumed(" + consumed[0] + ", " + consumed[1] + "), type " + type);
+                }
                 return false;
             }
         }
     }
 
     @Override
-    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
-        return dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, ViewCompat.TYPE_TOUCH);
-    }
-
-    @Override
     public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow, int type) {
         if (type == ViewCompat.TYPE_TOUCH || isLinkedParentFling(dyUnconsumed)) {
+            if (enableLog) {
+                log("dispatchNestedScroll: dyConsumed " + dyConsumed + ", dyUnconsumed " + dyUnconsumed + ", " + "type " + type);
+            }
             return super.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, type);
         } else {
+            if (enableLog) {
+                log("dispatchNestedScroll: false-自己消费, dyConsumed " + dyConsumed + ", dyUnconsumed " + dyUnconsumed + ", " + "type " + type);
+            }
             return false;
         }
     }
@@ -225,8 +276,14 @@ public class FCRecyclerView extends RecyclerView {
     @Override
     public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
         if (isCanScrollVertically((int) velocityY)) {
+            log("dispatchNestedPreFling: false-自己消费 velocityY " + velocityY);
             return false;
         } else {
+            log("dispatchNestedPreFling: velocityY " + velocityY);
+            if (isNestedScrollingEnabled() && lastDy * velocityY < 0) {
+                log("onNestedPreFling: lastDy " + lastDy + ", velocityY " + velocityY + ", velocityY 异常", true);
+                return true;
+            }
             return super.dispatchNestedPreFling(velocityX, velocityY);
         }
     }
@@ -234,7 +291,17 @@ public class FCRecyclerView extends RecyclerView {
     @Override
     public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
 //        return super.dispatchNestedFling(velocityX, velocityY, consumed && isCanScrollVertically((int) velocityY));
+        log("dispatchNestedFling: velocityY " + velocityY + ", consumed " + consumed);
         return super.dispatchNestedFling(velocityX, velocityY, consumed);
+    }
 
+    private void log(String message) {
+        log(message, false);
+    }
+
+    private void log(String message, boolean isForce) {
+        if (enableLog || isForce) {
+            Log.i("FCNested", "[" + uuid + "-FCRecyclerView] " + message);
+        }
     }
 }
