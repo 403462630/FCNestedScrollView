@@ -20,7 +20,7 @@ gradle依赖
 
 ```
 // androidx support
-implementation 'fc.nestedscrollview.androidx:library:1.0.3'
+implementation 'fc.nestedscrollview.androidx:library:1.0.4'
 
 // support version 大于等于28，请使用1.3.3
 implementation 'com.fc.nestedscrollview:library:1.3.4'
