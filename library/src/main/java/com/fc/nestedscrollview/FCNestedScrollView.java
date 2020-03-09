@@ -10,6 +10,7 @@ import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.NestedScrollingChild2;
 import androidx.core.view.ViewCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,6 +52,11 @@ public class FCNestedScrollView extends NestedScrollView {
     private long lastScrollUpdate = -1;
     private int scrollTaskInterval = 100;
     private boolean isTouched = false;
+
+    // 用来修复 NestedScrollView 嵌套滚动 bug
+    private boolean nonTouchFlag = false;
+    private NestedScrollingChild2 nonTouchTargetView = null;
+
     private Runnable scrollingRunnable = new Runnable() {
         @Override
         public void run() {
@@ -252,6 +258,9 @@ public class FCNestedScrollView extends NestedScrollView {
             targetFlingView = null;
             isFling = false;
             isTouched = true;
+            if (nonTouchFlag && nonTouchTargetView != null) {
+                nonTouchTargetView.stopNestedScroll(ViewCompat.TYPE_NON_TOUCH);
+            }
         } else if (ev.getAction() == MotionEvent.ACTION_UP) {
             isTouched = false;
         }
@@ -413,7 +422,14 @@ public class FCNestedScrollView extends NestedScrollView {
     @Override
     public boolean onStartNestedScroll(@NonNull View child, @NonNull View target, int axes, int type) {
         log("onStartNestedScroll: axes  " + axes + ", type " + type);
-        return super.onStartNestedScroll(child, target, axes, type);
+        boolean flag = super.onStartNestedScroll(child, target, axes, type);
+        if (flag) {
+            if (type == ViewCompat.TYPE_NON_TOUCH && target instanceof NestedScrollingChild2) {
+                nonTouchFlag = true;
+                nonTouchTargetView = (NestedScrollingChild2) target;
+            }
+        }
+        return flag;
     }
 
     @Override
@@ -426,6 +442,10 @@ public class FCNestedScrollView extends NestedScrollView {
     public void onStopNestedScroll(@NonNull View target, int type) {
         log("onNestedScrollAccepted: type " + type);
         super.onStopNestedScroll(target, type);
+        if (type == ViewCompat.TYPE_NON_TOUCH) {
+            nonTouchTargetView = null;
+            nonTouchFlag = false;
+        }
     }
 
     @Override

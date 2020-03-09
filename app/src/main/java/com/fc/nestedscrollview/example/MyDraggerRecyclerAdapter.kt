@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.item_dragger.*
  */
 class MyDraggerRecyclerAdapter(data: List<String>) : BaseItemDraggableAdapter<String, MyDraggerRecyclerAdapter.MyViewHolder>(R.layout.item_dragger, data) {
 
-    override fun convert(helper: MyViewHolder?, item: String?) {
+    override fun convert(helper: MyViewHolder, item: String?) {
         helper!!.setText(R.id.tv_content, item)
     }
 

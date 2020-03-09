@@ -45,5 +45,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation project(":library")
 //    implementation 'fc.nestedscrollview.androidx:library:1.0.0'
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.45-androidx'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.49-androidx'
 }
