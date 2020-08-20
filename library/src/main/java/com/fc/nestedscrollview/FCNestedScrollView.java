@@ -42,7 +42,7 @@ public class FCNestedScrollView extends NestedScrollView {
     private boolean isNestedScrolling2Enabled = true;
     // 测试看日志专用
     public String logId;
-    public boolean enableLog;
+    public boolean enableLog = false;
 
     public int lastDy;
 
@@ -174,7 +174,14 @@ public class FCNestedScrollView extends NestedScrollView {
      * @return
      */
     protected boolean isLinkedChildFling(int direction, View flingView) {
-        return isLinkedChild && flingView != null && (flingView.canScrollVertically(direction) || flingView instanceof FCSwipeRefreshLayout);
+        if (!isLinkedChild || flingView == null) {
+            return false;
+        }
+        if (flingView instanceof FCFlingView) {
+            return ((FCFlingView) flingView).canFling(direction);
+        } else {
+            return flingView.canScrollVertically(direction);
+        }
     }
 
     /**
@@ -189,8 +196,8 @@ public class FCNestedScrollView extends NestedScrollView {
             ((NestedScrollView) flingView).fling(velocityY);
         } else if (flingView instanceof WebView) {
             ((WebView) flingView).flingScroll(0, velocityY);
-        } else if (flingView instanceof FCSwipeRefreshLayout) {
-            ((FCSwipeRefreshLayout) flingView).fling(velocityY);
+        } else if (flingView instanceof FCFlingView) {
+            ((FCFlingView) flingView).fling(velocityY);
         }
     }
 
@@ -223,8 +230,12 @@ public class FCNestedScrollView extends NestedScrollView {
                 if (isLinkedChildFling(dy, view)) {
 //                        Log.i(TAG, "onScrollChanged   linkedChildFling ");
                     int velocityY = (int) FcNestedUtil.getCurrVelocityY(this);
-                    if (velocityY != 0) {
-                        linkedChildFling(view, velocityY);
+                    if (lastDy * velocityY < 0) {
+                        log("onScrollChanged: lastDy " + lastDy + ", velocityY " + velocityY + ", velocityY 异常", true);
+                    } else {
+                        if (velocityY != 0) {
+                            linkedChildFling(view, velocityY);
+                        }
                     }
                 }
                 isFling = false;

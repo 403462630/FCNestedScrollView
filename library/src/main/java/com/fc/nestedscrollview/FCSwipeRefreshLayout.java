@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
  * Created by fangcan on 2018/3/31.
  */
 
-public class FCSwipeRefreshLayout extends SwipeRefreshLayout {
+public class FCSwipeRefreshLayout extends SwipeRefreshLayout implements FCFlingView {
     private Field draggingField;
     private View targetView;
     /** 当自己滚到顶或底部的时候 否联动child滚动 */
@@ -28,7 +28,7 @@ public class FCSwipeRefreshLayout extends SwipeRefreshLayout {
         super(context, attrs);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.FCSwipeRefreshLayout);
         isLinkedChild = typedArray.getBoolean(R.styleable.FCSwipeRefreshLayout_fc_is_linked_child, true);
-        isPullRefreshIntercept = true; // typedArray.getBoolean(R.styleable.FCSwipeRefreshLayout_fc_is_pull_refresh_intercept, false);
+        isPullRefreshIntercept = typedArray.getBoolean(R.styleable.FCSwipeRefreshLayout_fc_is_pull_refresh_intercept, false);
         typedArray.recycle();
         try {
             draggingField = getClass().getSuperclass().getDeclaredField("mTotalUnconsumed");
@@ -40,20 +40,6 @@ public class FCSwipeRefreshLayout extends SwipeRefreshLayout {
 
     public void setPullRefreshIntercept(boolean pullRefreshIntercept) {
         isPullRefreshIntercept = pullRefreshIntercept;
-    }
-
-    public void fling(float velocityY) {
-        if (isLinkedChild && this.targetView != null) {
-            if (this.targetView.canScrollVertically((int) velocityY)) {
-                if (this.targetView instanceof FCRecyclerView) {
-                    ((FCRecyclerView)this.targetView).fling(0, (int) velocityY);
-                } else if (this.targetView instanceof FCNestedScrollView) {
-                    ((FCNestedScrollView)this.targetView).fling((int) velocityY);
-                } else if (this.targetView instanceof FCWebView) {
-                    ((FCWebView)this.targetView).flingScroll(0, (int) velocityY);
-                }
-            }
-        }
     }
 
     @Override
@@ -111,6 +97,26 @@ public class FCSwipeRefreshLayout extends SwipeRefreshLayout {
                 e.printStackTrace();
             }
             return !isDragging && super.dispatchNestedFling(velocityX, velocityY, consumed);
+        }
+    }
+
+    @Override
+    public boolean canFling(int direction) {
+        return true;
+    }
+
+    @Override
+    public void fling(int velocityY) {
+        if (isLinkedChild && this.targetView != null) {
+            if (this.targetView.canScrollVertically((int) velocityY)) {
+                if (this.targetView instanceof FCRecyclerView) {
+                    ((FCRecyclerView)this.targetView).fling(0, (int) velocityY);
+                } else if (this.targetView instanceof FCNestedScrollView) {
+                    ((FCNestedScrollView)this.targetView).fling((int) velocityY);
+                } else if (this.targetView instanceof FCWebView) {
+                    ((FCWebView)this.targetView).flingScroll(0, (int) velocityY);
+                }
+            }
         }
     }
 }
