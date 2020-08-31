@@ -27,7 +27,7 @@ public class FCRecyclerView extends RecyclerView {
     public static final int MODEL_NONE = 3; //自己最后滚动
     private static final String TAG = "FCRecycleView";
 
-    private int nestedScrollModel = MODEL_ALL;
+    private int nestedScrollModel = MODEL_NONE;
     /** 当滚到顶或底部的时候 否联动parent滚动 */
     private boolean isLinkedParent;
     private boolean isDraggingItem = false;
@@ -63,7 +63,7 @@ public class FCRecyclerView extends RecyclerView {
         super(context, attrs, defStyle);
         uuid = UUID.randomUUID().toString();
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.FCRecyclerView);
-        nestedScrollModel = typedArray.getInt(R.styleable.FCRecyclerView_fc_scroll_mode, MODEL_ALL);
+        nestedScrollModel = typedArray.getInt(R.styleable.FCRecyclerView_fc_scroll_mode, MODEL_NONE);
         isLinkedParent = typedArray.getBoolean(R.styleable.FCRecyclerView_fc_is_linked_parent, true);
         typedArray.recycle();
     }
