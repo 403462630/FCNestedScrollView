@@ -190,14 +190,14 @@ public class FCNestedScrollView extends NestedScrollView {
      * @param velocityY
      */
     protected void linkedChildFling(View flingView, int velocityY) {
-        if (flingView instanceof RecyclerView) {
+        if (flingView instanceof FCFlingView) {
+            ((FCFlingView) flingView).fling(velocityY);
+        } else if (flingView instanceof RecyclerView) {
             ((RecyclerView) flingView).fling(0, velocityY);
         } else if (flingView instanceof NestedScrollView) {
             ((NestedScrollView) flingView).fling(velocityY);
         } else if (flingView instanceof WebView) {
             ((WebView) flingView).flingScroll(0, velocityY);
-        } else if (flingView instanceof FCFlingView) {
-            ((FCFlingView) flingView).fling(velocityY);
         }
     }
 
