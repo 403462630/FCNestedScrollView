@@ -5,6 +5,8 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.lang.reflect.Field;
@@ -49,17 +51,36 @@ public class FCSwipeRefreshLayout extends SwipeRefreshLayout implements FCFlingV
     }
 
     @Override
+    public void onNestedPreScroll(View target, int dx, int dy, int[] consumed, int type) {
+        super.onNestedPreScroll(target, dx, dy, consumed, type);
+    }
+
+    @Override
+    public void onNestedScroll(@NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type, @NonNull int[] consumed) {
+        super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type, consumed);
+    }
+
+    @Override
     public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
-        if (dy < 0 && isPullRefreshIntercept) {
-            return false;
+        return super.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
+    }
+
+    @Override
+    public void dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, @Nullable int[] offsetInWindow, int type, @NonNull int[] consumed) {
+        if (dyUnconsumed < 0 && !isRefreshing()) {
+//            return false;
         } else {
-            return super.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
+            super.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, type, consumed);
         }
     }
 
     @Override
     public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
-        return false;
+        if (dyUnconsumed < 0 && !isRefreshing()) {
+            return false;
+        } else {
+            return super.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow);
+        }
     }
 
     @Override
