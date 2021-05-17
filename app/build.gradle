@@ -47,4 +47,5 @@ dependencies {
     implementation project(":library")
 //    implementation 'fc.nestedscrollview.androidx:library:1.0.0'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.49-androidx'
+//    implementation 'com.github.403462630:FCNestedScrollView:1.0.0'
 }

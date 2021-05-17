@@ -12,15 +12,12 @@
 maven地址
 
 ```
-maven {
-    url  "https://dl.bintray.com/403462630/maven"
-}
+maven { url 'https://jitpack.io' }
 ```
 gradle依赖
 
 ```
-// androidx support
-implementation 'fc.nestedscrollview.androidx:library:1.0.7'
+implementation 'com.github.403462630:FCNestedScrollView:1.0.0'
 ```
 
 ### 此项目提供四个view
